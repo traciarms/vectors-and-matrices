@@ -141,6 +141,9 @@ C = [[1, 2],
      [1, 2]]
 D = [[1, 2, 3],
      [3, 2, 1]]
+E = [[1, 2, 3],
+     [3, 2, 1],
+     [1, 1, 1]]
 
 
 def test_shape_matrices():
@@ -219,14 +222,10 @@ def test_matrix_matrix_multiply():
 
     Matrix * Matrix = Matrix
     """
-    assert matrix_matrix_multiply(A, B) == A
-    assert matrix_matrix_multiply(B, C) == [[8, 10],
-                                            [20, 25],
-                                            [32, 40]]
-    assert matrix_matrix_multiply(C, D) == [[7, 6, 5],
-                                            [5, 6, 7],
-                                            [7, 6, 5]]
-    assert matrix_matrix_multiply(D, C) == [[8, 10], [8, 10]]
+    assert matrix_matrix_multiply(A, B) == B
+    assert matrix_matrix_multiply(A, E) == [[1, 2, 3],
+                                            [3, 2, 1],
+                                            [1, 1, 1]]
 
 
 @raises(ShapeException)

@@ -51,16 +51,18 @@ def vector_sum(*vectors):
     """
         vector_sum can take any number of vectors and add them together.
     """
-    # create the return vector filled with zeros to add to.
-    r_vector = [0] * len(vectors[0])
+    cnt = 1
+    # for all the vectors passed in - check their size is equal to the first
+    while cnt <= len(vectors)-1:
+        if shape(vectors[0]) != shape(vectors[cnt]):
+            raise ShapeException("You cannot add two vectors that are not"
+                                 " the same length!")
+        cnt += 1
 
-    for i in vectors:
-        r_vector = vector_add(r_vector, i)
-
-    # r_vector = [vector_add(r_vector, i)+vectors[i]
-    #                                   for i in range(vectors[0])]
-
-    return r_vector
+    return [
+        sum([vector[i] for vector in vectors])
+        for i in range(len(vectors[0]))
+    ]
 
 
 def dot(v1, v2):
@@ -147,11 +149,8 @@ def matrix_scalar_multiply(matrix, scalar):
 
         Matrix * Scalar = Matrix
     """
-    r_matrix = []
-    for i in matrix:
-        r_matrix.append(vector_multiply(i, scalar))
-
-    return r_matrix
+    return [[each*scalar for each in matrix[i]]
+            for i in range(len(matrix))]
 
 
 def matrix_vector_multiply(matrix, vector):
@@ -165,10 +164,8 @@ def matrix_vector_multiply(matrix, vector):
     if shape(matrix_row(matrix, 0)) != shape(vector):
         raise ShapeException("You cannot multiply these two shapes!")
 
-    r_vector = [sum(matrix[i][j]*vector[j] for j in range(len(vector)))
-                for i in range(len(matrix))]
-
-    return r_vector
+    return [sum(matrix[i][j]*vector[j] for j in range(len(vector)))
+            for i in range(len(matrix))]
 
 
 def matrix_matrix_multiply(m1, m2):
@@ -183,17 +180,15 @@ def matrix_matrix_multiply(m1, m2):
        shape(matrix_col(m1, 0)) != shape(matrix_col(m2, 0)):
         raise ShapeException("You cannot multiply these two shapes!")
 
-    r_matrix = [[sum(m1[i][k]*m2[k][j] for k in range(len(m2)))
-                for j in range(len(m2[0]))]
-                for i in range(len(m1))]
-
-    return r_matrix
+    return [[sum(m1[i][k]*m2[k][j] for k in range(len(m2)))
+            for j in range(len(m2[0]))]
+            for i in range(len(m1))]
 
 
 if __name__ == '__main__':
 
     a = [1, 4, 3, 9]
-    b = [2, 2, 2, 4]
+    b = [2, 2, 2, 5]
     c = [3, 1, 5, 9]
     d = [3, 2, 8, 7]
 
@@ -207,10 +202,14 @@ if __name__ == '__main__':
          [2, 1],
          [1, 2]]
     D = [[1, 2, 3],
-         [3, 2, 1]]
+         [3, 2, 1],
+         [1, 1, 1]]
 
     print(matrix_vector_multiply(A, [2, 5, 4]))
+    print(matrix_scalar_multiply(B, 1))
+    print(matrix_scalar_multiply(C, 3))
     print(matrix_matrix_multiply(A, B))
+    print(matrix_matrix_multiply(A, D))
     print(shape(a))
     print(shape(C))
     print(vector_add(a, b))
